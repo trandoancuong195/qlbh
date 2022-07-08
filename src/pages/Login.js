@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink, useLocation} from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Card, Link, Container, Typography } from '@mui/material';
@@ -58,7 +58,8 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   const smUp = useResponsive('up', 'sm');
-
+  const location = useLocation();
+  const redirect = location.state?.path || '/'
   const mdUp = useResponsive('up', 'md');
 
   return (
