@@ -2,6 +2,8 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
+
+import {useContext, useEffect, useState} from "react";
 // layouts
 import DashboardLayout from '../../layouts/dashboard';
 import LogoOnlyLayout from '../../layouts/LogoOnlyLayout';
@@ -14,11 +16,40 @@ import Register from '../../pages/Register';
 import Products from '../../pages/Products';
 import DashboardApp from '../../pages/DashboardApp';
 import {PrivateRoute} from "./PrivateRoute";
+import * as href from "../../api/url";
+import {getData} from "../../api/api";
+import * as auth from "../auth";
 
 
 export default function Content() {
     // ----------------------------------------------------------------------
-
+    const [state, dispatch] = useContext(auth.GlobalContext)
+    const [isLoading, changeIsLoading] = useState(true)
+    const fakeDataUser = () => {
+        dispatch({type: 'SET_USER', payload: {}})
+        dispatch({type: 'SET_LOGIN'})
+        changeIsLoading(false)
+    }
+    useEffect(() => {
+        // fakeDataUser()
+        const url = href.getUrlUserInfo()
+        getData(url)
+            .then(res => {
+                console.log(res)
+                if (res && res.data && res.data.user_id) {
+                    dispatch({type: 'SET_USER', payload: res.data})
+                    dispatch({type: 'SET_LOGIN'})
+                    // UposLogFunc("Login Success" + JSON.stringify(res.data));
+                }
+                changeIsLoading(false)
+                // cns;
+            })
+            .catch(err => {
+                dispatch({type: 'SET_USER', payload: {}})
+                dispatch({type: 'SET_LOGOUT'})
+                changeIsLoading(false)
+            })
+    }, [])
     // return useRoutes([
     //   {
     //     path: '/dashboard',
@@ -44,6 +75,7 @@ export default function Content() {
     //   { path: '*', element: <Navigate to="/404" replace /> },
     // ]);
     return (
+        <AuthProvider>
             <Routes>
                 <Route path={'/'} element={<LogoOnlyLayout/>}>
                     <Route path="/dashboard" element={<PrivateRoute><DashboardLayout/></PrivateRoute>}>
@@ -59,5 +91,6 @@ export default function Content() {
                     <Route path={"/"} element={<PrivateRoute><DashboardLayout/></PrivateRoute>}/>
                 </Route>
             </Routes>
+        </AuthProvider>
 )
 }

@@ -1,11 +1,11 @@
 import {Navigate, useLocation} from "react-router-dom";
-import {useAuth} from "../auth";
+import {useContext} from "react";
+import {GlobalContext} from "../auth"
 
 export const PrivateRoute = ({ children }) => {
-    const auth = useAuth()
-    console.log(auth)
+    const [state, dispatch] = useContext(GlobalContext)
     const location = useLocation()
-    if(!auth.user){
+    if(state.isLogin){
         return <Navigate to={'/login'} state={{path: location.pathname}}/>
     }
     return children
