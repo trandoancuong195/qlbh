@@ -1,8 +1,9 @@
-import {useAuth} from "../auth";
 import {Navigate, useLocation} from "react-router-dom";
+import {useAuth} from "../auth";
 
-export const PrivateRoute = ({children}) => {
+export const PrivateRoute = ({ children }) => {
     const auth = useAuth()
+    console.log(auth)
     const location = useLocation()
     if(!auth.user){
         return <Navigate to={'/login'} state={{path: location.pathname}}/>

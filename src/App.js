@@ -1,5 +1,5 @@
 // routes
-import Content from './routes';
+import Content from './components/route/routes';
 // theme
 import ThemeProvider from './theme';
 import {AuthProvider} from  './components/auth'
